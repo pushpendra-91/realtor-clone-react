@@ -42,6 +42,7 @@ export default function SignUp() {
       console.log("user: ", user)
     } catch (error) {
       toast.error("Something went wrong");
+      console.log(error)
     }
   }
 
