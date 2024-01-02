@@ -7,12 +7,17 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, { EffectFade, Autoplay, Navigation, Pagination } from 'swiper';
 import "swiper/css/bundle";
 import { FaShare, FaMapMarkerAlt, FaBed, FaBath, FaParking, FaChair } from "react-icons/fa";
+import { getAuth } from 'firebase/auth';
+import Contact from '../components/Contact';
+import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 
 export default function Listing() {
     const params = useParams();
+    const auth = getAuth();
     const [listing, setListing] = useState(null);
     const [loading, setLoading] = useState(true);
     const [shareLinkCopied, setShareLinkCopied] = useState(false);
+    const [contactLandLord, setContactLandLord] = useState(false);
 
     SwiperCore.use([Autoplay, Navigation, Pagination]);
 
@@ -32,6 +37,7 @@ export default function Listing() {
         return <Spinner />
     }
 
+    // console.log("listing: ", listing)
 
     return (
         <main>
@@ -57,7 +63,7 @@ export default function Listing() {
                 <p className='fixed top-[22%] right-[5%] font-semibold border-2 border-gray-400 rounded-md bg-white z-10 p-2'>Link Copied</p>
             )}
             <div className='flex flex-col md:flex-row max-w-6xl lg:mx-auto p-4 rounded-lg border-3 shadow-lg bg-white lg:space-x-5'>
-                <div className='w-full h-[200px] lg-[400px]'>
+                <div className='w-full lg-[400px]'>
                     <p className='text-2xl font-bold mb-3 text-blue-900'>
                         {listing.name} - ${listing.offer ? listing.discountedPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : listing.regularPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                         {listing.type === "rent" ? "/ month" : ""}
@@ -76,7 +82,7 @@ export default function Listing() {
                         <span className='font-semibold'>Description - </span>
                         {listing.description}
                     </p>
-                    <ul className='flex items-center space-x-2 sm:space-x-10 font-semibold'>
+                    <ul className='flex items-center space-x-2 sm:space-x-10 font-semibold mb-6'>
                         <li className='flex items-center whitespace-nowrap'>
                             <FaBed className='text-lg mr-1' />
                             {parseInt(listing.bedrooms, 10) > 1 ? `${listing.bedrooms} Beds` : `1 Bed`}
@@ -94,8 +100,28 @@ export default function Listing() {
                             {listing.furnished ? 'Furnished' : 'Not Furnished'}
                         </li>
                     </ul>
+                    {listing.userRef !== auth.currentUser?.uid && !contactLandLord && (
+                        <div className='mt-6'>
+                            <button onClick={() => setContactLandLord(true)} className='px-7 py-3 bg-blue-600 text-white font-medium text-sm uppercase rounded shadow-md hover:bg-blue-600 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg w-full text-center transition duration-150 ease-in-out'>Contact LandLord</button>
+                        </div>
+                    )}
+                    {contactLandLord && (
+                        <Contact userRef={listing.userRef} listing={listing} />
+                    )}
                 </div>
-                <div className='bg-blue-300 w-full h-[200px] lg-[400px] z-10 overflow-x-hidden'></div>
+                <div className='w-full h-[200px] lg:h-[400px] z-10 overflow-x-hidden mt-6 md:mt-0 md:ml-2'>
+                    <MapContainer center={[listing.geoLocation.lat, listing.geoLocation.lng]} zoom={13} scrollWheelZoom={false} style={{ height: "100%", width: "100%" }}>
+                        <TileLayer
+                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        />
+                        <Marker position={[listing.geoLocation.lat, listing.geoLocation.lng]}>
+                            <Popup>
+                                A pretty CSS3 popup. <br /> Easily customizable.
+                            </Popup>
+                        </Marker>
+                    </MapContainer>
+                </div>
             </div>
         </main>
     )
