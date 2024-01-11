@@ -4,7 +4,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 Project simulates [Realtor](https://www.realtor.com/)'s basic functionality like creating, editing, deleting, updating and Authentication operations.\
 Firebase Database used for storing the information.
 
-## [Demo](https://realtor-clone-react-sable-gamma.vercel.app/) Link
+## [Click here](https://realtor-clone-react-sable-gamma.vercel.app/) for demo.
 
 ## Available Scripts
 
