@@ -9,7 +9,7 @@ import { db } from '../firebase';
 import { useNavigate, useParams } from 'react-router';
 
 
-export default function CreateListing() {
+export default function EditListing() {
     const auth = getAuth();
     const navigate = useNavigate();
     const [geoLocationEnabled, setGeoLocationEnabled] = useState(false);
@@ -50,7 +50,12 @@ export default function CreateListing() {
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
                 setListing(docSnap.data());
-                setFormData({ ...docSnap.data() })
+                // setFormData({ ...docSnap.data() })
+                setFormData(() => ({
+                    ...docSnap.data(),
+                    latitude: docSnap.data().geoLocation.lat,
+                    longitude: docSnap.data().geoLocation.lng
+                }))
                 setLoading(false);
             } else {
                 navigate("/")
@@ -131,7 +136,7 @@ export default function CreateListing() {
                         // Observe state change events such as progress, pause, and resume
                         // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
                         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        console.log('Upload is ' + progress + '% done');
+                        // console.log('Upload is ' + progress + '% done');
                         switch (snapshot.state) {
                             case 'paused':
                                 // console.log('Upload is paused');
