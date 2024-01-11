@@ -1,8 +1,10 @@
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).\
-Project simulates [Realtor(https://www.realtor.com/)]'s basic functionality like creating, editing, deleting, updating and Authentication operations.\
-Firebase Database used for storing the information.\
+Project simulates [Realtor](https://www.realtor.com/)'s basic functionality like creating, editing, deleting, updating and Authentication operations.\
+Firebase Database used for storing the information.
+
+## [Demo](https://realtor-clone-react-sable-gamma.vercel.app/) Link
 
 ## Available Scripts
 
